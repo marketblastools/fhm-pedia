@@ -6,58 +6,40 @@
 <title>FHM PEDIA</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 body{
 background:linear-gradient(135deg,#08111f,#111827,#0f172a);
-color:white;
+color:#fff;
 }
-
 .container{
-max-width:520px;
+max-width:560px;
 margin:auto;
 padding:15px;
 }
-
 .card{
 background:rgba(255,255,255,.05);
 padding:16px;
-border-radius:18px;
 margin-top:15px;
-backdrop-filter:blur(10px);
+border-radius:18px;
 }
-
-input,select,textarea{
+input,select,textarea,button{
 width:100%;
 padding:12px;
 margin-top:8px;
 border:none;
 border-radius:12px;
-background:#0f172a;
+}
+input,select,textarea{
+background:#111827;
 color:#fff;
 }
-
 button{
-width:100%;
-padding:12px;
-margin-top:12px;
-border:none;
-border-radius:12px;
+background:linear-gradient(90deg,#06b6d4,#2563eb);
+color:#fff;
 font-weight:bold;
 cursor:pointer;
-background:linear-gradient(90deg,#06b6d4,#2563eb);
-color:white;
 }
-
-.hidden{
-display:none;
-}
-
+.hidden{display:none}
 .header{
 display:flex;
 justify-content:space-between;
@@ -66,60 +48,29 @@ padding:12px;
 border-radius:15px;
 background:rgba(255,255,255,.05);
 }
-
 .coin{
 background:#10b981;
 padding:8px 12px;
 border-radius:12px;
 }
-
+.item{
+background:#111827;
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+}
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
 margin-top:12px;
 }
-
 .menu{
 background:#111827;
 padding:12px;
-border-radius:14px;
-text-align:center;
-cursor:pointer;
-font-size:13px;
-}
-
-.menu img{
-width:42px;
-height:42px;
-margin-bottom:6px;
-}
-
-.invoice{
-background:#111827;
-padding:15px;
-border-radius:15px;
-margin-top:12px;
-}
-
-.page{
-display:none;
-}
-
-.orderItem{
-background:#111827;
-padding:12px;
 border-radius:12px;
-margin-top:10px;
-}
-
-.badge{
-display:inline-block;
-padding:6px 10px;
-border-radius:10px;
-font-size:12px;
-margin-top:8px;
-background:#f59e0b;
+text-align:center;
+font-size:13px;
 }
 </style>
 </head>
@@ -127,87 +78,66 @@ background:#f59e0b;
 
 <div class="container">
 
-<!-- REGISTER -->
-<div id="registerBox" class="card">
+<div id="home" class="card">
+<h2>🚀 FHM PEDIA</h2>
 
-<h2>Daftar Member</h2>
+<button onclick="showRegister()">Daftar Member</button>
+<button onclick="showLogin()">Login Member</button>
+<button onclick="showAdmin()">Login Admin</button>
+</div>
+
+<div id="registerBox" class="card hidden">
+<h2>Daftar</h2>
 
 <input id="regName" placeholder="Nama">
+<input id="regUser" placeholder="Username">
+<input id="regPass" type="password" placeholder="Password">
 
-<input id="regUser"
-placeholder="Username">
-
-<input id="regPass"
-type="password"
-placeholder="Password">
-
-<button onclick="register()">
-Daftar
-</button>
-
-<button onclick="showLogin()">
-Sudah punya akun
-</button>
-
+<button onclick="register()">Daftar</button>
+<button onclick="backHome()">Kembali</button>
 </div>
 
-<!-- LOGIN -->
-<div id="loginBox"
-class="card hidden">
-
-<h2>Login</h2>
+<div id="loginBox" class="card hidden">
+<h2>Login Member</h2>
 
 <input id="loginUser">
+<input id="loginPass" type="password">
 
-<input id="loginPass"
-type="password">
-
-<button onclick="login()">
-Masuk
-</button>
-
+<button onclick="loginMember()">Masuk</button>
+<button onclick="backHome()">Kembali</button>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard"
-class="hidden">
+<div id="adminBox" class="card hidden">
+<h2>Login Admin</h2>
+
+<input id="adminUser">
+<input id="adminPass" type="password">
+
+<button onclick="loginAdmin()">Masuk</button>
+<button onclick="backHome()">Kembali</button>
+</div>
+
+<div id="memberDash" class="hidden">
 
 <div class="header">
-
 <b id="memberName"></b>
-
 <div class="coin">
 🪙 <span id="coin">0</span>
 </div>
-
 </div>
 
-<button onclick="toggleTopup()">
-Top Up
-</button>
-
-<!-- TOPUP -->
-<div id="topupBox"
-class="card hidden">
-
+<div class="card">
 <h2>Top Up</h2>
 
-<input id="topupNominal"
-type="number"
-placeholder="Nominal">
+<input id="topupNominal" type="number" placeholder="Nominal">
 
-<button onclick="topup()">
-Kirim Permintaan
-</button>
+<button onclick="topup()">Kirim Topup</button>
 
-<div id="invoiceBox"></div>
-
+<div id="invoice"></div>
 </div>
 
-<!-- ORDER -->
 <div class="card">
-
-<h2>🚀 FHM PEDIA</h2>
+<h2>Order FHM PEDIA</h2>
 
 <select id="kategori">
 <option>Instagram</option>
@@ -218,187 +148,146 @@ Kirim Permintaan
 <option>WhatsApp</option>
 </select>
 
-<input id="link"
-placeholder="Link">
+<input id="link" placeholder="Link">
+<input id="jumlah" placeholder="Jumlah">
 
-<input id="jumlah"
-placeholder="Jumlah order">
+<textarea id="ket" placeholder="Keterangan"></textarea>
 
-<textarea id="ket"
-placeholder="Keterangan"></textarea>
-
-<button onclick="submitOrder()">
-Submit Order
-</button>
-
+<button onclick="submitOrder()">Submit</button>
 </div>
 
-<!-- MENU -->
 <div class="card">
-
 <h2>Layanan</h2>
 
 <div class="grid">
-
-<div class="menu"
-onclick="openPage('p1')">
-
-<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-
-PPOB
-
+<div class="menu">PPOB</div>
+<div class="menu">TikTok</div>
+<div class="menu">Shopee</div>
+<div class="menu">YouTube</div>
+<div class="menu">WhatsApp</div>
+<div class="menu">Marketplace</div>
+</div>
 </div>
 
-<div class="menu"
-onclick="openPage('p2')">
-
-<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
-
-Facebook
-
-</div>
-
-<div class="menu"
-onclick="openPage('p3')">
-
-<img src="https://cdn-icons-png.flaticon.com/512/3046/3046122.png">
-
-TikTok
-
-</div>
-
-<div class="menu"
-onclick="openPage('p4')">
-
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png">
-
-Shopee
-
-</div>
-
-<div class="menu"
-onclick="openPage('p5')">
-
-<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
-
-WhatsApp
-
-</div>
-
-<div class="menu"
-onclick="openPage('p6')">
-
-<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
-
-YouTube
-
-</div>
-
-</div>
-
-</div>
-
-<!-- HISTORY -->
 <div class="card">
-
-<h2>Riwayat Order</h2>
-
+<h2>Riwayat</h2>
 <div id="history"></div>
-
 </div>
 
+<button onclick="logout()">Logout</button>
 </div>
 
-<!-- PAGE -->
-<div id="p1" class="page container">
-<button onclick="backHome()">⬅ kembali</button>
-<div class="card">Halaman PPOB</div>
+<div id="adminDash" class="hidden">
+
+<div class="card">
+<h2>⚙️ Panel Admin</h2>
+
+<input id="rekening" placeholder="Nomor rekening">
+<input id="qr" placeholder="Link QR">
+
+<button onclick="savePayment()">
+Simpan pembayaran
+</button>
+
+<div id="memberList"></div>
+<div id="orderList"></div>
+
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
 </div>
 
-<div id="p2" class="page container">
-<button onclick="backHome()">⬅ kembali</button>
-<div class="card">Halaman Facebook</div>
-</div>
-
-<div id="p3" class="page container">
-<button onclick="backHome()">⬅ kembali</button>
-<div class="card">Halaman TikTok</div>
-</div>
-
-<div id="p4" class="page container">
-<button onclick="backHome()">⬅ kembali</button>
-<div class="card">Halaman Shopee</div>
-</div>
-
-<div id="p5" class="page container">
-<button onclick="backHome()">⬅ kembali</button>
-<div class="card">Halaman WhatsApp</div>
-</div>
-
-<div id="p6" class="page container">
-<button onclick="backHome()">⬅ kembali</button>
-<div class="card">Halaman YouTube</div>
 </div>
 
 <script>
 
+let currentMember=null;
+
+function hideAll(){
+[
+home,
+registerBox,
+loginBox,
+adminBox,
+memberDash,
+adminDash
+].forEach(a=>a.classList.add("hidden"));
+}
+
+function backHome(){
+hideAll();
+home.classList.remove("hidden");
+}
+
+function showRegister(){
+hideAll();
+registerBox.classList.remove("hidden");
+}
+
+function showLogin(){
+hideAll();
+loginBox.classList.remove("hidden");
+}
+
+function showAdmin(){
+hideAll();
+adminBox.classList.remove("hidden");
+}
+
+function getMembers(){
+return JSON.parse(
+localStorage.getItem("members")
+||"[]"
+);
+}
+
+function saveMembers(a){
+localStorage.setItem(
+"members",
+JSON.stringify(a)
+);
+}
+
 function register(){
 
-let data={
+let list=getMembers();
+
+list.push({
 name:regName.value,
 user:regUser.value,
 pass:regPass.value,
 coin:0
-};
+});
 
-let members=
-JSON.parse(
-localStorage.getItem("members")
-||"[]"
-);
+saveMembers(list);
 
-members.push(data);
-
-localStorage.setItem(
-"members",
-JSON.stringify(members)
-);
-
-alert("Berhasil daftar");
+alert("Daftar berhasil");
 
 showLogin();
-
 }
 
-function showLogin(){
-
-registerBox.classList.add("hidden");
-
-loginBox.classList.remove("hidden");
-
-}
-
-function login(){
-
-let members=
-JSON.parse(
-localStorage.getItem("members")
-||"[]"
-);
+function loginMember(){
 
 let akun=
-members.find(a=>
+getMembers().find(a=>
 
 a.user===loginUser.value &&
 a.pass===loginPass.value
 
 );
 
-if(akun){
+if(!akun){
+alert("Login ditolak");
+return;
+}
 
-dashboard.classList.remove("hidden");
+currentMember=akun;
 
-loginBox.classList.add("hidden");
+hideAll();
+
+memberDash.classList.remove("hidden");
 
 memberName.innerText=
 "👤 "+akun.name;
@@ -407,69 +296,63 @@ coin.innerText=
 akun.coin||0;
 
 showHistory();
+}
+
+function loginAdmin(){
+
+if(
+adminUser.value==="admin" &&
+adminPass.value==="fhm123"
+){
+
+hideAll();
+
+adminDash.classList.remove("hidden");
+
+renderAdmin();
 
 }else{
 
-alert("Login ditolak");
+alert("Admin salah");
 
 }
-
-}
-
-function toggleTopup(){
-
-topupBox.classList.toggle("hidden");
-
 }
 
 function topup(){
 
-let nominal=
-parseInt(
-topupNominal.value||0
+let p=
+JSON.parse(
+localStorage.getItem("payment")
+||"{}"
 );
 
-let inv=
-"INV"+Date.now();
+invoice.innerHTML=`
 
-invoiceBox.innerHTML=
+<div class="item">
 
-`
-<div class="invoice">
-
-<h3>Invoice Top Up</h3>
-
-Nomor:
-${inv}
+Invoice:
+INV${Date.now()}
 
 <br><br>
 
 Nominal:
-Rp ${nominal.toLocaleString()}
+Rp ${Number(topupNominal.value||0).toLocaleString()}
 
 <br><br>
 
 Status:
-<b>Menunggu konfirmasi admin</b>
+Menunggu admin
 
 <br><br>
 
-QR pembayaran
-
-<img style="width:170px;border-radius:12px"
-src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg">
+${p.rekening||""}
 
 <br>
 
-BCA 1234567890
-
-<br>
-
-a/n FHM PEDIA
+${p.qr||""}
 
 </div>
 `;
-
 }
 
 function submitOrder(){
@@ -480,7 +363,9 @@ localStorage.getItem("orders")
 ||"[]"
 );
 
-let item={
+list.unshift({
+
+member:currentMember.name,
 
 kategori:kategori.value,
 
@@ -492,9 +377,7 @@ ket:ket.value,
 
 status:"Pending"
 
-};
-
-list.unshift(item);
+});
 
 localStorage.setItem(
 "orders",
@@ -503,6 +386,7 @@ JSON.stringify(list)
 
 showHistory();
 
+alert("Order masuk");
 }
 
 function showHistory(){
@@ -515,14 +399,15 @@ localStorage.getItem("orders")
 
 history.innerHTML="";
 
-list.forEach(a=>{
+list
+.filter(a=>a.member===currentMember.name)
+.forEach(a=>{
 
-history.innerHTML+=
+history.innerHTML+=`
 
-`
-<div class="orderItem">
+<div class="item">
 
-<b>${a.kategori}</b>
+${a.kategori}
 
 <br>
 
@@ -530,55 +415,118 @@ ${a.link}
 
 <br>
 
-Jumlah:
-${a.jumlah}
-
-<div class="badge">
-
 ${a.status}
 
 </div>
 
+`;
+
+});
+}
+
+function renderAdmin(){
+
+let m=getMembers();
+
+memberList.innerHTML="<h3>Member</h3>";
+
+m.forEach((a,i)=>{
+
+memberList.innerHTML+=`
+
+<div class="item">
+
+${a.name}
+
+<input
+value="${a.coin||0}"
+onchange="updateCoin(${i},this.value)">
+
 </div>
+
 `;
 
 });
 
-}
+let orders=
+JSON.parse(
+localStorage.getItem("orders")
+||"[]"
+);
 
-function openPage(id){
+orderList.innerHTML="<h3>Order</h3>";
 
-dashboard.style.display="none";
+orders.forEach((a,i)=>{
 
-document
-.querySelectorAll(".page")
-.forEach(a=>{
+orderList.innerHTML+=`
 
-a.style.display="none";
+<div class="item">
+
+${a.member}
+
+<br>
+
+${a.kategori}
+
+<select
+onchange="updateStatus(${i},this.value)">
+
+<option>Pending</option>
+<option>Proses</option>
+<option>Sukses</option>
+
+</select>
+
+</div>
+
+`;
 
 });
-
-document
-.getElementById(id)
-.style.display="block";
-
 }
 
-function backHome(){
+function updateCoin(i,val){
 
-document
-.querySelectorAll(".page")
-.forEach(a=>{
+let m=getMembers();
 
-a.style.display="none";
+m[i].coin=
+parseInt(val||0);
 
-});
+saveMembers(m);
+}
 
-dashboard.style.display="block";
+function updateStatus(i,val){
 
+let o=
+JSON.parse(
+localStorage.getItem("orders")
+||"[]"
+);
+
+o[i].status=val;
+
+localStorage.setItem(
+"orders",
+JSON.stringify(o)
+);
+}
+
+function savePayment(){
+
+localStorage.setItem(
+"payment",
+JSON.stringify({
+rekening:rekening.value,
+qr:qr.value
+})
+);
+
+alert("Tersimpan");
+}
+
+function logout(){
+location.reload();
 }
 
 </script>
-
 </body>
 </html>
