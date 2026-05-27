@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FHM PEDIA</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:linear-gradient(135deg,#08111f,#111827,#0f172a);
+color:white;
+}
+
+.container{
+max-width:520px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+padding:16px;
+border-radius:18px;
+margin-top:15px;
+backdrop-filter:blur(10px);
+}
+
+input,select,textarea{
+width:100%;
+padding:12px;
+margin-top:8px;
+border:none;
+border-radius:12px;
+background:#0f172a;
+color:#fff;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:12px;
+border:none;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+background:linear-gradient(90deg,#06b6d4,#2563eb);
+color:white;
+}
+
+.hidden{
+display:none;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border-radius:15px;
+background:rgba(255,255,255,.05);
+}
+
+.coin{
+background:#10b981;
+padding:8px 12px;
+border-radius:12px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:12px;
+}
+
+.menu{
+background:#111827;
+padding:12px;
+border-radius:14px;
+text-align:center;
+cursor:pointer;
+font-size:13px;
+}
+
+.menu img{
+width:42px;
+height:42px;
+margin-bottom:6px;
+}
+
+.invoice{
+background:#111827;
+padding:15px;
+border-radius:15px;
+margin-top:12px;
+}
+
+.page{
+display:none;
+}
+
+.orderItem{
+background:#111827;
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+}
+
+.badge{
+display:inline-block;
+padding:6px 10px;
+border-radius:10px;
+font-size:12px;
+margin-top:8px;
+background:#f59e0b;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- REGISTER -->
+<div id="registerBox" class="card">
+
+<h2>Daftar Member</h2>
+
+<input id="regName" placeholder="Nama">
+
+<input id="regUser"
+placeholder="Username">
+
+<input id="regPass"
+type="password"
+placeholder="Password">
+
+<button onclick="register()">
+Daftar
+</button>
+
+<button onclick="showLogin()">
+Sudah punya akun
+</button>
+
+</div>
+
+<!-- LOGIN -->
+<div id="loginBox"
+class="card hidden">
+
+<h2>Login</h2>
+
+<input id="loginUser">
+
+<input id="loginPass"
+type="password">
+
+<button onclick="login()">
+Masuk
+</button>
+
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard"
+class="hidden">
+
+<div class="header">
+
+<b id="memberName"></b>
+
+<div class="coin">
+🪙 <span id="coin">0</span>
+</div>
+
+</div>
+
+<button onclick="toggleTopup()">
+Top Up
+</button>
+
+<!-- TOPUP -->
+<div id="topupBox"
+class="card hidden">
+
+<h2>Top Up</h2>
+
+<input id="topupNominal"
+type="number"
+placeholder="Nominal">
+
+<button onclick="topup()">
+Kirim Permintaan
+</button>
+
+<div id="invoiceBox"></div>
+
+</div>
+
+<!-- ORDER -->
+<div class="card">
+
+<h2>🚀 FHM PEDIA</h2>
+
+<select id="kategori">
+<option>Instagram</option>
+<option>Facebook</option>
+<option>TikTok</option>
+<option>YouTube</option>
+<option>Shopee</option>
+<option>WhatsApp</option>
+</select>
+
+<input id="link"
+placeholder="Link">
+
+<input id="jumlah"
+placeholder="Jumlah order">
+
+<textarea id="ket"
+placeholder="Keterangan"></textarea>
+
+<button onclick="submitOrder()">
+Submit Order
+</button>
+
+</div>
+
+<!-- MENU -->
+<div class="card">
+
+<h2>Layanan</h2>
+
+<div class="grid">
+
+<div class="menu"
+onclick="openPage('p1')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+
+PPOB
+
+</div>
+
+<div class="menu"
+onclick="openPage('p2')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+
+Facebook
+
+</div>
+
+<div class="menu"
+onclick="openPage('p3')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3046/3046122.png">
+
+TikTok
+
+</div>
+
+<div class="menu"
+onclick="openPage('p4')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png">
+
+Shopee
+
+</div>
+
+<div class="menu"
+onclick="openPage('p5')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+
+WhatsApp
+
+</div>
+
+<div class="menu"
+onclick="openPage('p6')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+
+YouTube
+
+</div>
+
+</div>
+
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+
+<h2>Riwayat Order</h2>
+
+<div id="history"></div>
+
+</div>
+
+</div>
+
+<!-- PAGE -->
+<div id="p1" class="page container">
+<button onclick="backHome()">⬅ kembali</button>
+<div class="card">Halaman PPOB</div>
+</div>
+
+<div id="p2" class="page container">
+<button onclick="backHome()">⬅ kembali</button>
+<div class="card">Halaman Facebook</div>
+</div>
+
+<div id="p3" class="page container">
+<button onclick="backHome()">⬅ kembali</button>
+<div class="card">Halaman TikTok</div>
+</div>
+
+<div id="p4" class="page container">
+<button onclick="backHome()">⬅ kembali</button>
+<div class="card">Halaman Shopee</div>
+</div>
+
+<div id="p5" class="page container">
+<button onclick="backHome()">⬅ kembali</button>
+<div class="card">Halaman WhatsApp</div>
+</div>
+
+<div id="p6" class="page container">
+<button onclick="backHome()">⬅ kembali</button>
+<div class="card">Halaman YouTube</div>
+</div>
+
+<script>
+
+function register(){
+
+let data={
+name:regName.value,
+user:regUser.value,
+pass:regPass.value,
+coin:0
+};
+
+let members=
+JSON.parse(
+localStorage.getItem("members")
+||"[]"
+);
+
+members.push(data);
+
+localStorage.setItem(
+"members",
+JSON.stringify(members)
+);
+
+alert("Berhasil daftar");
+
+showLogin();
+
+}
+
+function showLogin(){
+
+registerBox.classList.add("hidden");
+
+loginBox.classList.remove("hidden");
+
+}
+
+function login(){
+
+let members=
+JSON.parse(
+localStorage.getItem("members")
+||"[]"
+);
+
+let akun=
+members.find(a=>
+
+a.user===loginUser.value &&
+a.pass===loginPass.value
+
+);
+
+if(akun){
+
+dashboard.classList.remove("hidden");
+
+loginBox.classList.add("hidden");
+
+memberName.innerText=
+"👤 "+akun.name;
+
+coin.innerText=
+akun.coin||0;
+
+showHistory();
+
+}else{
+
+alert("Login ditolak");
+
+}
+
+}
+
+function toggleTopup(){
+
+topupBox.classList.toggle("hidden");
+
+}
+
+function topup(){
+
+let nominal=
+parseInt(
+topupNominal.value||0
+);
+
+let inv=
+"INV"+Date.now();
+
+invoiceBox.innerHTML=
+
+`
+<div class="invoice">
+
+<h3>Invoice Top Up</h3>
+
+Nomor:
+${inv}
+
+<br><br>
+
+Nominal:
+Rp ${nominal.toLocaleString()}
+
+<br><br>
+
+Status:
+<b>Menunggu konfirmasi admin</b>
+
+<br><br>
+
+QR pembayaran
+
+<img style="width:170px;border-radius:12px"
+src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg">
+
+<br>
+
+BCA 1234567890
+
+<br>
+
+a/n FHM PEDIA
+
+</div>
+`;
+
+}
+
+function submitOrder(){
+
+let list=
+JSON.parse(
+localStorage.getItem("orders")
+||"[]"
+);
+
+let item={
+
+kategori:kategori.value,
+
+link:link.value,
+
+jumlah:jumlah.value,
+
+ket:ket.value,
+
+status:"Pending"
+
+};
+
+list.unshift(item);
+
+localStorage.setItem(
+"orders",
+JSON.stringify(list)
+);
+
+showHistory();
+
+}
+
+function showHistory(){
+
+let list=
+JSON.parse(
+localStorage.getItem("orders")
+||"[]"
+);
+
+history.innerHTML="";
+
+list.forEach(a=>{
+
+history.innerHTML+=
+
+`
+<div class="orderItem">
+
+<b>${a.kategori}</b>
+
+<br>
+
+${a.link}
+
+<br>
+
+Jumlah:
+${a.jumlah}
+
+<div class="badge">
+
+${a.status}
+
+</div>
+
+</div>
+`;
+
+});
+
+}
+
+function openPage(id){
+
+dashboard.style.display="none";
+
+document
+.querySelectorAll(".page")
+.forEach(a=>{
+
+a.style.display="none";
+
+});
+
+document
+.getElementById(id)
+.style.display="block";
+
+}
+
+function backHome(){
+
+document
+.querySelectorAll(".page")
+.forEach(a=>{
+
+a.style.display="none";
+
+});
+
+dashboard.style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>

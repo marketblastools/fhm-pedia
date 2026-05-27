@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FHM PEDIA ADMIN</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:linear-gradient(135deg,#071028,#111827,#0f172a);
+color:#fff;
+}
+
+.container{
+max-width:550px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+padding:16px;
+border-radius:18px;
+margin-top:15px;
+backdrop-filter:blur(10px);
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin-top:8px;
+border:none;
+border-radius:12px;
+background:#111827;
+color:#fff;
+}
+
+button{
+cursor:pointer;
+font-weight:bold;
+background:linear-gradient(90deg,#06b6d4,#2563eb);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.item{
+background:#111827;
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+}
+
+img{
+width:150px;
+border-radius:12px;
+margin-top:10px;
+}
+
+.hidden{
+display:none;
+}
+
+.badge{
+padding:6px 10px;
+border-radius:10px;
+display:inline-block;
+font-size:12px;
+margin-top:8px;
+}
+
+.pending{background:#f59e0b;}
+.proses{background:#3b82f6;}
+.sukses{background:#16a34a;}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginBox" class="card">
+
+<h2>🔐 Admin Login</h2>
+
+<input id="adminUser"
+placeholder="Username">
+
+<input id="adminPass"
+type="password"
+placeholder="Password">
+
+<button onclick="adminLogin()">
+Masuk Admin
+</button>
+
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard"
+class="hidden">
+
+<div class="card">
+
+<h2>⚙️ FHM PEDIA ADMIN</h2>
+
+<button onclick="logoutAdmin()">
+Logout
+</button>
+
+</div>
+
+<!-- STATS -->
+<div class="card">
+
+<h2>📊 Statistik</h2>
+
+<div class="grid">
+
+<div class="item">
+Member:
+<br>
+<b id="totalMember">0</b>
+</div>
+
+<div class="item">
+Order:
+<br>
+<b id="totalOrder">0</b>
+</div>
+
+<div class="item">
+Pending:
+<br>
+<b id="pendingOrder">0</b>
+</div>
+
+<div class="item">
+Sukses:
+<br>
+<b id="successOrder">0</b>
+</div>
+
+</div>
+
+</div>
+
+<!-- ADD MEMBER -->
+<div class="card">
+
+<h2>➕ Tambah Member</h2>
+
+<input id="newName"
+placeholder="Nama">
+
+<input id="newUser"
+placeholder="Username">
+
+<input id="newPass"
+placeholder="Password">
+
+<button onclick="addMember()">
+Tambah Member
+</button>
+
+</div>
+
+<!-- MEMBER LIST -->
+<div class="card">
+
+<h2>👥 Data Member</h2>
+
+<div id="memberList"></div>
+
+</div>
+
+<!-- ORDER -->
+<div class="card">
+
+<h2>📦 Semua Order</h2>
+
+<div id="orderList"></div>
+
+</div>
+
+<!-- PAYMENT -->
+<div class="card">
+
+<h2>💳 Pembayaran</h2>
+
+<input id="rekening"
+placeholder="Nomor rekening">
+
+<input id="qr"
+placeholder="Link QR image">
+
+<button onclick="savePayment()">
+
+Simpan Pembayaran
+
+</button>
+
+<div id="paymentView"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const adminUsername="admin";
+const adminPassword="fhm123";
+
+function adminLogin(){
+
+let u=
+document.getElementById("adminUser")
+.value.trim();
+
+let p=
+document.getElementById("adminPass")
+.value.trim();
+
+if(
+u===adminUsername &&
+p===adminPassword
+){
+
+loginBox.classList.add("hidden");
+
+dashboard.classList.remove("hidden");
+
+renderAll();
+
+}else{
+
+alert(
+"Login ditolak\nusername: admin\npassword: fhm123"
+);
+
+}
+
+}
+
+function logoutAdmin(){
+
+location.reload();
+
+}
+
+function getMembers(){
+
+return JSON.parse(
+localStorage.getItem("members")
+||"[]"
+);
+
+}
+
+function saveMembers(data){
+
+localStorage.setItem(
+"members",
+JSON.stringify(data)
+);
+
+}
+
+function addMember(){
+
+let list=getMembers();
+
+list.push({
+
+name:newName.value,
+
+user:newUser.value,
+
+pass:newPass.value,
+
+coin:0
+
+});
+
+saveMembers(list);
+
+renderAll();
+
+}
+
+function updateCoin(i,val){
+
+let list=getMembers();
+
+list[i].coin=
+parseInt(val||0);
+
+saveMembers(list);
+
+}
+
+function deleteMember(i){
+
+let list=getMembers();
+
+list.splice(i,1);
+
+saveMembers(list);
+
+renderAll();
+
+}
+
+function renderMembers(){
+
+let list=getMembers();
+
+memberList.innerHTML="";
+
+list.forEach((a,i)=>{
+
+memberList.innerHTML+=`
+
+<div class="item">
+
+<b>${a.name}</b>
+
+<br>
+
+${a.user}
+
+<br><br>
+
+Saldo
+
+<input
+value="${a.coin||0}"
+onchange="updateCoin(${i},this.value)">
+
+<button
+onclick="deleteMember(${i})">
+
+Hapus
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function getOrders(){
+
+return JSON.parse(
+localStorage.getItem("orders")
+||"[]"
+);
+
+}
+
+function renderOrders(){
+
+let list=getOrders();
+
+orderList.innerHTML="";
+
+list.forEach((a,i)=>{
+
+let warna="pending";
+
+if(a.status==="Proses")
+warna="proses";
+
+if(a.status==="Sukses")
+warna="sukses";
+
+orderList.innerHTML+=`
+
+<div class="item">
+
+<b>${a.kategori||"-"}</b>
+
+<br>
+
+${a.link||"-"}
+
+<br>
+
+Jumlah:
+${a.jumlah||0}
+
+<br>
+
+<select
+onchange="changeStatus(${i},this.value)">
+
+<option ${
+a.status==="Pending"
+?"selected":""
+}>Pending</option>
+
+<option ${
+a.status==="Proses"
+?"selected":""
+}>Proses</option>
+
+<option ${
+a.status==="Sukses"
+?"selected":""
+}>Sukses</option>
+
+</select>
+
+<div class="badge ${warna}">
+${a.status}
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function changeStatus(i,status){
+
+let list=getOrders();
+
+list[i].status=status;
+
+localStorage.setItem(
+"orders",
+JSON.stringify(list)
+);
+
+renderAll();
+
+}
+
+function savePayment(){
+
+let data={
+
+rekening:rekening.value,
+
+qr:qr.value
+
+};
+
+localStorage.setItem(
+"payment",
+JSON.stringify(data)
+);
+
+renderPayment();
+
+}
+
+function renderPayment(){
+
+let p=
+JSON.parse(
+localStorage.getItem("payment")
+||"{}"
+);
+
+rekening.value=
+p.rekening||"";
+
+qr.value=
+p.qr||"";
+
+paymentView.innerHTML=`
+
+<div class="item">
+
+${p.rekening||""}
+
+<br>
+
+${
+p.qr
+?`<img src="${p.qr}">`
+:""
+}
+
+</div>
+
+`;
+
+}
+
+function renderStats(){
+
+let m=getMembers();
+
+let o=getOrders();
+
+totalMember.innerText=m.length;
+
+totalOrder.innerText=o.length;
+
+pendingOrder.innerText=
+o.filter(
+a=>a.status==="Pending"
+).length;
+
+successOrder.innerText=
+o.filter(
+a=>a.status==="Sukses"
+).length;
+
+}
+
+function renderAll(){
+
+renderMembers();
+
+renderOrders();
+
+renderPayment();
+
+renderStats();
+
+}
+
+</script>
+
+</body>
+</html>
